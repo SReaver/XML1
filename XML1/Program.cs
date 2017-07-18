@@ -21,6 +21,9 @@ namespace XML1
         public string ShipmentPeriod { get; set; }
         public string Warehouse { get; set; }
 
+        public void SetXML()
+        { }
+
        
     }
 
@@ -43,6 +46,10 @@ namespace XML1
             xdoc.Add(ordersRoot);
             xdoc.Save("orders.xml");
         }
+
+        //C:\Users\плотниковс\Documents\Visual Studio 2015\Projects\FS2\FS2
+
+
         static void Main(string[] args)
         {
             
@@ -65,13 +72,28 @@ namespace XML1
 
 
                 PropertyInfo[] pInfo = typeof(Order).GetProperties();
+                MethodInfo[] mInfo = typeof(Order).GetMethods();
                 for (int i = 0; i < pInfo.Length; i++)
                 {
                     XElement orderElem = new XElement(pInfo[i].Name, item.GetType().GetProperty(pInfo[i].Name).GetValue(item, null));
-
                     newXElem.Add(orderElem);
+                    XElement orderMethod = new XElement(mInfo[i].Name, item.GetType().GetMethod(mInfo[i].Name));
+                    newXElem.Add(orderMethod);
                 }
                 xmlOrders.Add(newXElem);
+
+                //MethodInfo[] minfo = typeof(Order).GetMethods();
+                //for (int i = 0; i < mInfo.Length; i++)
+                //{
+                //    XElement orderElem = new XElement(pInfo[i].Name, item.GetType().GetProperty(pInfo[i].Name).GetValue(item, null));
+                //    XElement orderMethod = new XElement(mInfo[i]., item.GetType().GetMethod(pInfo[i].Name));
+
+                //    newXElem.Add(orderElem);
+                //    newXElem.Add(orderMethod);
+                //}
+                //xmlOrders.Add(newXElem);
+
+
             }
             xd1.Add(xmlOrders);
             xd1.Save("newXml.xml");
