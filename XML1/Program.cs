@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -33,7 +34,7 @@ namespace XML1
             XElement xmlOrders = new XElement("order");
 
             XAttribute orderAttr = new XAttribute("Id", 161);
-            XAttribute orderElem_UserId = new XAttribute("Elem1", 145);
+            XElement orderElem_UserId = new XElement("Elem1", 145);
 
             xmlOrders.Add(orderAttr);
             xmlOrders.Add(orderElem_UserId);
@@ -50,7 +51,34 @@ namespace XML1
             orders.Add(new Order() { UserId = 122, Count = 2, Brand = "Teren", Article = "Fimin", Name = "Titev", Price = 230, ShipmentPeriod = "3", Warehouse = "Afiro", Id = 33 });
             orders.Add(new Order() { UserId = 121, Count = 5, Brand = "Zeo", Article = "Gaze", Name = "Titev", Price = 56, ShipmentPeriod = "56", Warehouse = "Cintro", Id = 89 });
 
-            CreateXml(new Order() { UserId = 123, Count = 3, Brand = "Silica", Article = "Visio", Name = "Titev", Price = 23, ShipmentPeriod = "34", Warehouse = "Lublino", Id = 45 });
+            Order o = new Order() { UserId = 123, Count = 3, Brand = "Silica", Article = "Visio", Name = "Titev", Price = 23, ShipmentPeriod = "34", Warehouse = "Lublino", Id = 45 };
+            CreateXml(o);
+
+
+
+            XDocument xd1 = new XDocument();
+
+            XElement xmlOrders = new XElement("orders");
+            foreach (var item in orders)
+            {
+                XElement newXElem = new XElement("order");
+
+
+                PropertyInfo[] pInfo = typeof(Order).GetProperties();
+                for (int i = 0; i < pInfo.Length; i++)
+                {
+                    XElement orderElem = new XElement(pInfo[i].Name, item.GetType().GetProperty(pInfo[i].Name).GetValue(item, null));
+
+                    newXElem.Add(orderElem);
+                }
+                xmlOrders.Add(newXElem);
+            }
+            xd1.Add(xmlOrders);
+            xd1.Save("newXml.xml");
+
+
+
+
 
         }
     }
